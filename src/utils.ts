@@ -1,8 +1,7 @@
 import * as vscode from "vscode";
 import * as path from "path";
-import { config, reloadConfig } from './config';
 
-export const EXT_ID = 'php-minifier';
+export const EXT_ID = "php-minifier";
 
 export function isMinified(doc: vscode.TextDocument): boolean {
   const baseName = path.basename(doc.fileName);
@@ -23,27 +22,14 @@ export function getOutPath(doc: vscode.TextDocument): string {
 
   outNameParts.pop();
 
-  if (file.languageId === "php") {
-    outNameParts.push("min");
-  }
+  outNameParts.push("min");
 
   outNameParts.push(file.extname.replace(".", ""));
   const baseOut = outNameParts.join(".");
 
   let outPath: string;
 
-  if (file.languageId === "php") {
-    if (vscode.workspace.workspaceFolders) {
-      outPath = path.join(
-        vscode.workspace.workspaceFolders[0].uri.fsPath,
-        baseOut
-      );
-    } else {
-      outPath = path.join(file.dirname, baseOut);
-    }
-  } else {
-    outPath = "";
-  }
+  outPath = path.join(file.dirname, baseOut);
 
   return outPath;
 }
