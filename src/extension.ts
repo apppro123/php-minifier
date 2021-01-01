@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import { config, reloadConfig } from "./config";
 import { minifyDocument } from "./minify-document";
 import { statusBar } from "./status-bar";
-import { EXT_ID, onConfigFileChange, getOutPath, isMinified } from "./utils";
+import { EXT_ID, getOutPath, isMinified } from "./utils";
 import { File } from "./fs";
 
 // this method is called when your extension is activated
@@ -82,18 +82,6 @@ export function activate(context: vscode.ExtensionContext): void {
       minifyDocument(doc);
     })
   );
-
-  const watcher = vscode.workspace.createFileSystemWatcher(
-    "**",
-    false,
-    false,
-    false
-  );
-  watcher.onDidCreate(onConfigFileChange);
-  watcher.onDidChange(onConfigFileChange);
-  watcher.onDidDelete(onConfigFileChange);
-
-  context.subscriptions.push(watcher);
 }
 
 // this method is called when your extension is deactivated

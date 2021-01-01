@@ -26,14 +26,14 @@ export function minifyDocument(doc: vscode.TextDocument): void {
 }
 
   function minifyPHP(phpText: string): string {
-      //first time I replace phpText, after I always take minifiedText
-      //replace all php comments
-      let minifiedText = phpText.replace(/\/\*[\s\S]*?\*\/|\/\/.*/g, ''); 
+      //replace all html comments
+      let minifiedText = phpText.replace(/<!-- [\s\S]*?-->/g, ''); 
+      //remove php comments
+      minifiedText = minifiedText.replace(/\/\*[\s\S]*?\*\/|\/\/.*/g, '');
       //remove white space
       minifiedText = minifiedText.replace(/\r/g, '');
       minifiedText = minifiedText.replace(/\n/g, '');
       minifiedText = minifiedText.replace(/\t/g, '');
-      //remove html comments
-      minifiedText = minifiedText.replace(/<!--(?!\s*(?:\[if [^\]]+]|<!|>))(?:(?!-->).)*-->/g, '');
+
     return minifiedText;
   }
