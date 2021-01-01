@@ -1,5 +1,8 @@
 import * as vscode from "vscode";
 import * as path from "path";
+import { config, reloadConfig } from './config';
+
+export const EXT_ID = 'php-minifier';
 
 export function isMinified(doc: vscode.TextDocument): boolean {
   const baseName = path.basename(doc.fileName);
@@ -43,4 +46,21 @@ export function getOutPath(doc: vscode.TextDocument): string {
   }
 
   return outPath;
+}
+
+/* function isConfigFile(path: string): boolean {
+
+  return path.endsWith(config.uglifyConfigFile) || path.endsWith(config.cleancssConfigFile) || path.endsWith(config.autoprefixerConfigFile);
+
+}
+ */
+export function onConfigFileChange(uri: vscode.Uri) {
+
+ // if (isConfigFile(uri.path)) {
+
+      reloadConfig();
+      vscode.window.showInformationMessage('Minify configuration reloaded.');
+
+  //}
+
 }

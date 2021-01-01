@@ -1,17 +1,20 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 import * as vscode from "vscode";
+import { config, reloadConfig } from "./config";
 import { minifyDocument } from "./minify-document";
 import { statusBar } from "./status-bar";
+import { EXT_ID, onConfigFileChange, getOutPath, isMinified } from "./utils";
+import { File } from "./fs";
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
-export function activate(context: vscode.ExtensionContext) {
-  // The command has been defined in the package.json file
-  // Now provide the implementation of the command with registerCommand
-  // The commandId parameter must match the command field in package.json
+export function activate(context: vscode.ExtensionContext): void {
+  // Load config
+  reloadConfig();
 
-  statusBar.showButton();
+  // Show minify button
+  if (config.hideButton !== "never") {
+    statusBar.showButton();
+  }
 
   let disposable = vscode.commands.registerCommand(
     "php-minifier.minify_php",
@@ -33,7 +36,64 @@ export function activate(context: vscode.ExtensionContext) {
     }
   );
 
-  context.subscriptions.push(disposable);
+  context.subscriptions.push(
+    disposable,
+    // Reload minify config if the vscode config is modified
+    vscode.workspace.onDidChangeConfiguration((e) => {
+      if (e.affectsConfiguration(EXT_ID)) {
+        reloadConfig();
+        if (config.hideButton === "never") {
+          statusBar.showButton();
+        } else if (config.hideButton === "always") {
+          statusBar.hideButton();
+        }
+        vscode.window.showInformationMessage("Minify configuration reloaded.");
+      }
+    }),
+    vscode.workspace.onDidOpenTextDocument(() => {
+      if (
+        vscode.window.activeTextEditor &&
+        (config.hideButton === "auto" || config.hideButton === true)
+      ) {
+        const doc = vscode.window.activeTextEditor.document;
+        if (doc.languageId === "php" && !isMinified(doc)) {
+          statusBar.showButton();
+        } else {
+          statusBar.hideButton();
+        }
+      }
+    }),
+    // Minify on save.
+    vscode.workspace.onDidSaveTextDocument((doc) => {
+      if (
+        config.minifyOnSave === false ||
+        config.minifyOnSave === "no" ||
+        doc.languageId !== "php"
+      ) {
+        return;
+      }
+
+      if (config.minifyOnSave === "exists") {
+        if (!new File(getOutPath(doc)).exists()) {
+          return;
+        }
+      }
+
+      minifyDocument(doc);
+    })
+  );
+
+  const watcher = vscode.workspace.createFileSystemWatcher(
+    "**",
+    false,
+    false,
+    false
+  );
+  watcher.onDidCreate(onConfigFileChange);
+  watcher.onDidChange(onConfigFileChange);
+  watcher.onDidDelete(onConfigFileChange);
+
+  context.subscriptions.push(watcher);
 }
 
 // this method is called when your extension is deactivated

@@ -1,9 +1,6 @@
 import * as vscode from "vscode";
-import * as path from "path";
-import { output } from "./output";
-import { isMinified, getOutPath, str_ireplace } from "./utils";
+import { isMinified, getOutPath } from "./utils";
 import { File } from "./fs";
-import { statusBar } from "./status-bar";
 
 export function minifyDocument(doc: vscode.TextDocument): void {
   const phpText = doc.getText();
@@ -21,21 +18,14 @@ export function minifyDocument(doc: vscode.TextDocument): void {
   // Minify
   if (doc.languageId === "php") {
     const outPath = getOutPath(doc);
-    const minifiedCode = minify_PHP(phpText);
+    const minifiedCode = minifyPHP(phpText);
     new File(outPath).write(minifiedCode);
   } else {
     vscode.window.showErrorMessage("Language not supported.");
   }
 }
 
-function no_comments(phpText: string): string {
-    console.log(phpText);
-    const no_comments = phpText.replace(/\/\*[\s\S]*?\*\/|\/\/.*/g, '');
-    return no_comments;
-  }
-
-
-  function minify_PHP(phpText: string): string {
+  function minifyPHP(phpText: string): string {
       //first time I replace phpText, after I always take minifiedText
       //replace all php comments
       let minifiedText = phpText.replace(/\/\*[\s\S]*?\*\/|\/\/.*/g, ''); 
