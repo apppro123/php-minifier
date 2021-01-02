@@ -12,7 +12,7 @@ export function activate(context: vscode.ExtensionContext): void {
   reloadConfig();
 
   // Show minify button
-  if (config.hideButton !== "never") {
+  if (config.hideButton === "never") {
     statusBar.showButton();
   }
 

@@ -21,31 +21,31 @@
 				"command": "php-minifier.minify_php",
 				"title": "Minify PHP"
 			}
-		]
-	},
-	"configuration": {
-		"type": "object",
-		"title": "PHP Minifier",
-		"properties": {
-			"php-minifier.minifyOnSave": {
-				"type": "string",
-				"description": "Automatically minify file when saving. Set to \"yes\" to always minify, \"no\" to never minify, \"exists\" to only minify if a minified version already exists.",
-				"default": "no",
-				"enum": [
-					"yes",
-					"no",
-					"exists"
-				]
-			},
-			"php-minifier.hideButton": {
-				"type": "string",
-				"description": "Hide the minify button in the status bar.\n\"always\": Always hidden\n\"never\": Always visible. Even when minification is not supported.\n\"auto\": Hide the button when minification is not available. This is not 100% reliable.",
-				"default": "never",
-				"enum": [
-					"always",
-					"never",
-					"auto"
-				]
+		],
+		"configuration": {
+			"type": "object",
+			"title": "PHP Minifier",
+			"properties": {
+				"php-minifier.minifyOnSave": {
+					"type": "string",
+					"description": "Automatically minify file when saving. Set to \"yes\" to always minify, \"no\" to never minify, \"exists\" to only minify if a minified version already exists.",
+					"default": "no",
+					"enum": [
+						"yes",
+						"no",
+						"exists"
+					]
+				},
+				"php-minifier.hideButton": {
+					"type": "string",
+					"description": "Hide the minify button in the status bar.\n\"always\": Always hidden\n\"never\": Always visible. Even when minification is not supported.\n\"auto\": Hide the button when minification is not available. This is not 100% reliable.",
+					"default": "never",
+					"enum": [
+						"always",
+						"never",
+						"auto"
+					]
+				}
 			}
 		}
 	},
