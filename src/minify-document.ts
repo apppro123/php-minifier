@@ -27,9 +27,9 @@ export function minifyDocument(doc: vscode.TextDocument): void {
 
   function minifyPHP(phpText: string): string {
       //replace all html comments
-      let minifiedText = phpText.replace(/<!-- [\s\S]*?-->/g, ''); 
+      let minifiedText = phpText.replace(/<!--[\s\S]*?-->/g, ''); 
       //remove php comments
-      minifiedText = minifiedText.replace(/\/\*[\s\S]*?\*\/|\/\/.*/g, '');
+      minifiedText = minifiedText.replace(/\/\*[\s\S]*?\*\/|(?<!\:)\/\/.*/g, '');
       //remove white space
       minifiedText = minifiedText.replace(/\r/g, '');
       minifiedText = minifiedText.replace(/\n/g, '');
