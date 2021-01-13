@@ -2,7 +2,7 @@
 	"name": "php-minifier",
 	"displayName": "PHP Minifier",
 	"description": "minifier for PHP",
-	"version": "0.6.0",
+	"version": "1.0.0",
 	"engines": {
 		"vscode": "^1.51.0"
 	},
